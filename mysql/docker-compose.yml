@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db1:
+    image: mysql:8.0.32
+    ports:
+      - 3306:3306
+    volumes:
+      - /Users/ztine/Docker/Docker_Data/mysql/data:/var/lib/mysql
+      - /Users/ztine/Docker/Docker_Data/mysql/conf:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+networks:
+  #自定义网络
+  dbs: 
+    driver: custom-driver-1
+  #使用已经存在的网络
+  default:
+    external: 
+      name: apps
