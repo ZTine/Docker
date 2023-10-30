@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  redis-master:
+    image: redis:7.2
+    container_name: redis-master
+    command: redis-server --requirepass 123456  --masterauth 123456
+    ports:
+      - 6379:6379
+    volumes:
+      - $PWD/Docker_Data/redis/master/data:/data
+
+  redis-slave1:
+    image: redis:7.2
+    container_name: redis-slave-1
+    ports:
+      - 6381:6379
+    command:  redis-server --slaveof redis-master 6379 --requirepass 123456 --masterauth 123456
+    volumes:
+      - $PWD/Docker_Data/redis/slave1/data:/data
+
+  redis-slave2:
+    image: redis:7.2
+    container_name: redis-slave-2
+    ports:
+      - 6380:6379
+    command: redis-server --slaveof redis-master 6379 --requirepass 123456 --masterauth 123456
+    volumes:
+      - $PWD/Docker_Data/redis/slave2/data:/data
+
+    
+networks:
+  reids-net:
+    driver: bridge
+  default:
+    external: #使用已经存在的网络
+      name: apps

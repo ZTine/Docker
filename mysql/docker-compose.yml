@@ -1,19 +1,32 @@
 version: '3'
 services:
-  db1:
+  db-master:
     image: mysql:8.0.32
+    container_name: db-master 
     ports:
       - 3306:3306
     volumes:
-      - /Users/ztine/Docker/Docker_Data/mysql/data:/var/lib/mysql
-      - /Users/ztine/Docker/Docker_Data/mysql/conf:/etc/mysql/conf.d
+      - $PWD/Docker_Data/mysql/master/data:/var/lib/mysql
+      - $PWD/mysql/master/conf/my.cnf:/etc/my.cnf
     environment:
       MYSQL_ROOT_PASSWORD: "123456"
+
+  db-slave:
+    image: mysql:8.0.32
+    container_name: db-slave
+    ports:
+      - 3406:3306
+    volumes:
+      - $PWD/Docker_Data/mysql/slave/data:/var/lib/mysql
+      - $PWD/mysql/slave/conf/my.cnf:/etc/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+
 networks:
   #自定义网络
   dbs: 
     driver: custom-driver-1
   #使用已经存在的网络
   default:
-    external: 
-      name: apps
+    external: true
+    name: apps
