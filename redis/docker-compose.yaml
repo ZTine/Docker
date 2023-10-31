@@ -28,10 +28,37 @@ services:
     volumes:
       - $PWD/Docker_Data/redis/slave2/data:/data
 
+  sentinel1:
+    image: redis:7.2
+    container_name: redis-sentinel-1
+    ports:
+      - 26379:26379
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./sentinel/sentinel1.conf:/usr/local/etc/redis/sentinel.conf
+
+  sentinel2:
+    image: redis:7.2
+    container_name: redis-sentinel-2
+    ports:
+    - 26380:26379
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./sentinel/sentinel2.conf:/usr/local/etc/redis/sentinel.conf
+
+  sentinel3:
+    image: redis:7.2
+    container_name: redis-sentinel-3
+    ports:
+      - 26381:26379
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./sentinel/sentinel3.conf:/usr/local/etc/redis/sentinel.conf
+
     
 networks:
-  reids-net:
-    driver: bridge
   default:
-    external: #使用已经存在的网络
-      name: apps
+    name: reids-net
+    driver: bridge
+  apps: #使用已经存在的网络
+      external: true
